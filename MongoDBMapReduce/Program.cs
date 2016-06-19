@@ -29,20 +29,20 @@ namespace MongoDBMapReduce
 
             var map = GetFunction("CustomerMapFunction");
             var reduce = GetFunction("CustomerReduceFunction");
-            var options = new MapReduceOptions<Order, BsonDocument>();
-            options.Filter = Builders<Order>.Filter.Eq(o => o.CustomerId, 5000);
+            var options = new MapReduceOptions<Customer, BsonDocument>();
+            options.Filter = Builders<Customer>.Filter.Eq(o => o.CustomerId, 5000);
             options.Verbose = false;
             options.OutputOptions = MapReduceOutputOptions.Replace("Out");
-            database.GetCollection<Order>(CUSTOMER_COLLECTION).MapReduce<BsonDocument>(new BsonJavaScript(map), new BsonJavaScript(reduce), options);
+            database.GetCollection<Customer>(CUSTOMER_COLLECTION).MapReduce<BsonDocument>(new BsonJavaScript(map), new BsonJavaScript(reduce), options);
 
 
             var map2 = GetFunction("OrderMapFunction");
             var reduce2 = GetFunction("OrderReduceFunction");
-            var options2 = new MapReduceOptions<Customer, BsonDocument>();
-            options2.Filter = Builders<Customer>.Filter.Eq(o => o.CustomerId, 5000);
+            var options2 = new MapReduceOptions<Order, BsonDocument>();
+            options2.Filter = Builders<Order>.Filter.Eq(o => o.CustomerId, 5000);
             options2.Verbose = false;
             options2.OutputOptions = MapReduceOutputOptions.Reduce("Out");
-            var res = database.GetCollection<Customer>(ORDER_COLLECTION).MapReduce<BsonDocument>(new BsonJavaScript(map2), new BsonJavaScript(reduce2), options2);
+            var res = database.GetCollection<Order>(ORDER_COLLECTION).MapReduce<BsonDocument>(new BsonJavaScript(map2), new BsonJavaScript(reduce2), options2);
 
             var output = database.GetCollection<BsonDocument>("Out");
 
